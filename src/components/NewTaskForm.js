@@ -1,45 +1,42 @@
-import React, { useState } from "react";
+import React,{useState} from "react";
 
-function NewTaskForm({ categories, onTaskFormSubmit }) {
-  const [text, setText] = useState("");
-  const [category, setCategory] = useState(categories[1]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (text.trim() !== "") {
-      onTaskFormSubmit({ text, category });
-      setText("");
-      setCategory(categories[1]);
-    }
-  };
-
+function NewTaskForm({onTaskFormSubmit,categories}) {
+  
+  const [newItemFields, setNewItemFields]=useState({
+    text:'',
+    category:'Code'
+  })
+ 
+  function handleFields(e){
+    const{name,value}=e.target
+    setNewItemFields({...newItemFields,[name]:value})
+    
+  }
+  // console.log(newItemFields)
+  
+  
   return (
-    <form className="new-task-form" onSubmit={handleSubmit}>
+    <form
+    onSubmit={(e)=>{
+      e.preventDefault()
+      onTaskFormSubmit(newItemFields)}}
+    className="new-task-form"
+    >
       <label>
         Details
-        <input
-          type="text"
-          name="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
+        <input value={newItemFields.text} onChange={handleFields}  type="text" name="text" />
       </label>
+
       <label>
         Category
-        <select
-          name="category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          {categories
-            .filter((cat) => cat !== "All")
-            .map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
+        <select value={newItemFields.category} onChange={handleFields} name="category">
+          {/* render <option> elements for each category here */}
+          {categories.map((category,index)=>(
+            <option key={index}>{category}</option>
+          ))}
         </select>
       </label>
+
       <input type="submit" value="Add task" />
     </form>
   );

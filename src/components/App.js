@@ -4,41 +4,43 @@ import NewTaskForm from "./NewTaskForm";
 import TaskList from "./TaskList";
 
 import { CATEGORIES, TASKS } from "../data";
+console.log("Here's the data you're working with");
+console.log({ CATEGORIES, TASKS });
 
 function App() {
-  const [tasks, setTasks] = useState(TASKS);
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [task, setTask] = useState(TASKS)
+  const [categories, setCategories] = useState(CATEGORIES)
+  const [selectedCategory, setSelectedCategory] = useState("All")
 
-  // Function to handle adding a new task
-  const handleAddTask = (newTask) => {
-    setTasks([...tasks, newTask]);
-  };
 
-  // Function to handle deleting a task
-  const handleDeleteTask = (taskText) => {
-    setTasks(tasks.filter((task) => task.text !== taskText));
-  };
+  function addNewTask(newItem) {
+    setTask([...task, newItem])
+  }
 
-  // Function to handle category filtering
-  const handleCategoryChange = (category) => {
-    setSelectedCategory(category);
-  };
+  function deletedItem(deletedItem){
+    setTask(task.filter((item)=>item.text !== deletedItem))
+  }
 
-  // Filtering tasks based on the selected category
-  const tasksToDisplay = tasks.filter((task) =>
-    selectedCategory === "All" ? true : task.category === selectedCategory
-  );
+  const itemDisplayed = task
+  .filter(
+    (item)=>{ 
+      if(selectedCategory==='All') return true
+      return selectedCategory === item.category
+   })
 
   return (
     <div className="App">
       <h2>My tasks</h2>
       <CategoryFilter
-        categories={CATEGORIES}
-        selectedCategory={selectedCategory}
-        onCategoryChange={handleCategoryChange}
+        categories={categories}
+        onButton={selectedCategory}
+        selectedButton={setSelectedCategory} 
       />
-      <NewTaskForm categories={CATEGORIES} onTaskFormSubmit={handleAddTask} />
-      <TaskList tasks={tasksToDisplay} onDeleteTask={handleDeleteTask} />
+       <NewTaskForm
+        onTaskFormSubmit={addNewTask}
+        categories={categories}
+      />
+      <TaskList deletedItem={deletedItem} tasks={itemDisplayed}/>
     </div>
   );
 }
